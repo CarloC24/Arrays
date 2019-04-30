@@ -28,6 +28,7 @@ Array *create_array(int capacity)
   new_array->capacity = capacity;
   // Allocate memory for elements
   new_array->elements = calloc(capacity, sizeof(char *));
+  return new_array;
 }
 
 /*****
@@ -96,16 +97,29 @@ char *arr_read(Array *arr, int index)
  *****/
 void arr_insert(Array *arr, char *element, int index)
 {
-
   // Throw an error if the index is greater than the current count
-
-  // Resize the array if the number of elements is over capacity
-
-  // Move every element after the insert index to the right one position
-
+  printf("index %d \n", index);
+  if (index >= arr->count)
+  {
+    printf("Error index is greater than the current count \n");
+    return;
+  }
+  // // Resize the array if the number of elements is over capacity
+  if (arr->capacity <= arr->count)
+  {
+    printf("Resizing array");
+    resize_array(arr);
+  }
+  // // Move every element after the insert index to the right one position
+  for (int i = arr->count; index < i; i--)
+  {
+    arr->elements[i] = arr->elements[i - 1];
+  }
+  printf("%s this is the string \n", arr->elements[0]);
   // Copy the element and add it to the array
-
+  arr->elements[index] = element;
   // Increment count by 1
+  arr->count++;
 }
 
 /*****
@@ -140,14 +154,37 @@ void arr_append(Array *arr, char *element)
  *****/
 void arr_remove(Array *arr, char *element)
 {
-
-  // Search for the first occurence of the element and remove it.
-  // Don't forget to free its memory!
-
-  // Shift over every element after the removed element to the left one position
-
-  // Decrement count by 1
+  printf("here %d \n", arr->count);
+  int counter;
+  for (int i = 0; i < arr->count; i++)
+  {
+    if (strcmp(arr->elements[i], element) == 0)
+    {
+      counter = i;
+      free(arr->elements[i]);
+      break;
+    }
+  }
+  if (counter || counter == 0)
+  {
+    for (int j = counter; j < arr->count; j++)
+    {
+      arr->elements[j] = arr->elements[j + 1];
+    }
+    arr->count--;
+  }
+  else
+  {
+    printf("Item not found");
+  }
 }
+// Search for the first occurence of the element and remove it.
+
+// Don't forget to free its memory!
+
+// Shift over every element after the removed element to the left one position
+
+// Decrement count by 1
 
 /*****
  * Utility function to print an array.
